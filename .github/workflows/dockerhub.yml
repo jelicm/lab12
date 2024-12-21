@@ -44,8 +44,9 @@ jobs:
           KUBECONFIG: /home/runner/.kube/config
         run: |
           mkdir -p ~/.kube ~/.minikube
-          scp user@minikube-host:/path-to-kube-config ~/.kube/config
-          scp -r user@minikube-host:/path-to-minikube-dir ~/.minikube/
+          scp ~/.kube/config ~/.kube/config
+          scp -r ~/.minikube ~/.minikube
+
 
       - name: Pull images into Minikube
         run: |
