@@ -1,15 +1,15 @@
 package handler
 
 import (
+	"ccmainproject/domain"
+	"ccmainproject/service"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
-	"ccmainproject/service"
-	"ccmainproject/domain"
+
 	"github.com/gorilla/mux"
-	"fmt"
-	
 )
 
 type UserHandler struct {
@@ -21,7 +21,6 @@ func NewUserHandler(service *service.UsersService) *UserHandler {
 		service: service,
 	}
 }
-
 
 func (handler *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	users, err := handler.service.GetAll()
@@ -70,7 +69,7 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	responseBody := fmt.Sprintf("User ID: %d", userId)
+	responseBody := fmt.Sprintf("User ID is: %d", userId)
 	w.Write([]byte(responseBody))
 }
 
@@ -94,4 +93,3 @@ func (handler *UserHandler) Return(w http.ResponseWriter, r *http.Request) {
 	}
 	jsonResponse(users, w)
 }
-
