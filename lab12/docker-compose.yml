@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+
+  city_library:
+    image: milenaj/citylib:latest
+    container_name: city_library
+    restart: always
+    depends_on:
+      - city_db
+    environment:
+      DB_HOST: ${NS_DB_HOST}
+      DB_PORT: ${NS_DB_PORT}
+      MAIN_HOST: ${MAIN_HOST}
+      MAIN_PORT: ${MAIN_PORT}
+    ports:
+      - ${NS_PORT}:8001
+    networks:
+      - network
+
+  main_library:
+    image: milenaj/mainlib:latest
+    container_name: main_library
+    restart: always
+    depends_on:
+      - main_db
+    environment:
+      MAIN_DB_HOST: ${MAIN_DB_HOST}
+      MAIN_DB_PORT: ${MAIN_DB_PORT}
+    networks:
+      - network
+
+  city_db:
+    image: mongo
+    container_name: city_db
+    restart: on-failure
+    networks:
+      - network
+  
+  main_db:
+    image: mongo
+    container_name: main_db
+    restart: on-failure
+    networks:
+      - network
+
+networks:
+  network:
+    driver: bridge
+
+   
+      

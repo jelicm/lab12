@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mainlibdepl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mainlibrary
+  template:
+    metadata:
+      labels:
+        app: mainlibrary
+    spec:
+      containers:
+        - name: mainlibrary
+          image: milenaj/mainlib:latest
+          ports:
+            - containerPort: 8080
+          env:
+          - name: MAIN_DB_HOST
+            value: "localhost"
+          - name: MAIN_DB_PORT
+            value: "27017"
+
+        - name: maindb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: maindb
+      volumes:
+        - name: maindb
+          persistentVolumeClaim:
+            claimName: mainpvc
