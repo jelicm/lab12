@@ -28,3 +28,28 @@ jobs:
         run: |
           docker build -t milenaj/citylib:latest ./lab12/city-library
           docker push milenaj/citylib:latest
+          
+  deploy-to-minikube:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube start
+
+      - name: Deploy Go app to Minikube
+        run: |
+          kubectl apply -f ./lab12/minikube/deployments/maindepl.yaml
+          kubectl apply -f ./lab12/minikube/deployments/citydepl.yaml
+      - uses: apogiatzis/ngrok-tunneling-action@<VERSION>
+        with:
+          timeout: 1h
+          port: 30001
+          ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
+          save_url_to_filename: tunnelURL.md

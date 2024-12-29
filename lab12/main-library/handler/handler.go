@@ -69,7 +69,7 @@ func (handler *UserHandler) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	responseBody := fmt.Sprintf("User ID is: %d", userId)
+	responseBody := fmt.Sprintf("User ID isss: %d", userId)
 	w.Write([]byte(responseBody))
 }
 
