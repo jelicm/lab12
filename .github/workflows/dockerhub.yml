@@ -53,3 +53,8 @@ jobs:
           port: 30001
           ngrok_authtoken: ${{ secrets.NGROK_AUTHTOKEN }}
           save_url_to_filename: tunnelURL.md           
+      - name: Upload tunnelURL.md
+        uses: actions/upload-artifact@v3
+        with:
+          name: Ngrok-Tunnel-URL
+          path: tunnelURL.md
