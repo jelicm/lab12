@@ -41,12 +41,11 @@ jobs:
         run: |
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start
 
       - name: Deploy Go app to Minikube
         run: |
-          kubectl apply -f ./lab12/minikube/deployments/maindepl.yaml
-          kubectl apply -f ./lab12/minikube/deployments/citydepl.yaml
+          ./lab12/minikube/run.sh
+          chmod +x ./lab12/minikube/run.sh
       - uses: LuisBoto/ngrok-tunnel-action@v0.1.7.2
         with:
           timeout: 1h
