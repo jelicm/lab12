@@ -44,8 +44,8 @@ jobs:
 
       - name: Deploy Go app to Minikube
         run: |
-          ./lab12/minikube/run.sh
-          chmod +x ./lab12/minikube/run.sh
+          ./lab12/minikube/run_copy.sh
+          chmod +x ./lab12/minikube/run_copy.sh
       - name: Check NodePort Status
         run: |
           NODE_PORT=$(kubectl get service cityservice -o jsonpath='{.spec.ports[0].nodePort}')
