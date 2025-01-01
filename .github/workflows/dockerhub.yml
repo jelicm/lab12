@@ -46,6 +46,19 @@ jobs:
         run: |
           ./lab12/minikube/run.sh
           chmod +x ./lab12/minikube/run.sh
+      - name: Check NodePort Status
+        run: |
+          NODE_PORT=$(kubectl get service cityservice -o jsonpath='{.spec.ports[0].nodePort}')
+          NODE_IP=$(minikube ip)
+          echo "Service is expected to run at http://$NODE_IP:$NODE_PORT"
+        
+          # Check if the NodePort is accessible
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://$NODE_IP:$NODE_PORT)
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Error: Service is not responding on NodePort http://$NODE_IP:$NODE_PORT"
+            exit 1
+          fi
+          echo "Success: Service is responding on NodePort http://$NODE_IP:$NODE_PORT"
       - uses: LuisBoto/ngrok-tunnel-action@v0.1.7.2
         with:
           timeout: 1h
