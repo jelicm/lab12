@@ -14,7 +14,7 @@ services:
       MAIN_HOST: ${MAIN_HOST}
       MAIN_PORT: ${MAIN_PORT}
     ports:
-      - ${NS_PORT}:8001
+      - ${NS_PORT}:8000
     networks:
       - network
 
