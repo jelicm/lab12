@@ -16,7 +16,7 @@ spec:
         - name: citylibrary
           image: milenaj/citylib:latest
           ports:
-            - containerPort: 8001
+            - containerPort: 8000
           env:
           - name: DB_HOST
             value: "localhost"

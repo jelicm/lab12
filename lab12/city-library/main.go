@@ -1,15 +1,16 @@
 package main
 
 import (
-	"log"
+	"ccproject/handler"
+	"ccproject/service"
+	"ccproject/store"
 	"context"
+	"log"
 	"net/http"
 	"os"
-	"ccproject/handler"
-	"ccproject/store"
-	"ccproject/service"
-	"go.mongodb.org/mongo-driver/mongo"
+
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
@@ -42,11 +43,9 @@ func main() {
 	r.HandleFunc("/", bookHandler.GetAll).Methods("GET")
 	r.HandleFunc("/{userId}/{isbn}", bookHandler.Return).Methods("DELETE")
 
-
-
 	srv := &http.Server{
 		Handler: r,
-		Addr:    ":8001",
+		Addr:    ":8000",
 	}
 	log.Fatal(srv.ListenAndServe())
 }
