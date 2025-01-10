@@ -39,9 +39,9 @@ jobs:
       - name: Copy files
         run: |
           sudo mkdir -p /.minikube/profiles/minikube
-          sudo echo "${{ secrets.CA_CERT }}" > /.minikube/ca.crt
-          sudo echo "${{ secrets.CLIENT_CERT }}" > /.minikube/profiles/minikube/client.crt
-          sudo echo "${{ secrets.CLIENT_KEY }}" > /.minikube/profiles/minikube/client.key
+          echo "${{ secrets.CA_CERT }}" | sudo tee /.minikube/ca.crt > /dev/null
+          echo "${{ secrets.CLIENT_CERT }}" | sudo tee /.minikube/profiles/minikube/client.crt > /dev/null
+          echo "${{ secrets.CLIENT_KEY }}" | sudo tee /.minikube/profiles/minikube/client.key > /dev/null
           sudo mkdir -p $HOME/.kube
           sudo cp kubeconfig.yaml $HOME/.kube/config
         
