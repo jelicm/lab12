@@ -21,13 +21,13 @@ jobs:
 
       - name: main_library image build and push
         run: |
-          docker build -t milenaj/mainlib:latest ./lab12/main-library
-          docker push milenaj/mainlib:latest
+          docker build -t milenaj/mainlib:novo ./lab12/main-library
+          docker push milenaj/mainlib:novo
     
       - name: city_library imate build and push
         run: |
-          docker build -t milenaj/citylib:latest ./lab12/city-library
-          docker push milenaj/citylib:latest
+          docker build -t milenaj/citylib:novo ./lab12/city-library
+          docker push milenaj/citylib:novo
           
   deploy:
     runs-on: ubuntu-latest
