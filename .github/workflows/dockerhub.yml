@@ -74,5 +74,5 @@ jobs:
         run: |
           echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
+          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
+          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
