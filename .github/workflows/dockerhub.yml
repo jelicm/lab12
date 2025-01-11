@@ -48,6 +48,11 @@ jobs:
           echo "digest=$(docker inspect --format='{{index .RepoDigests 0}}' milenaj/citylib:latest)" >> $GITHUB_ENV
         env:
           digest: ${{ env.digest }}
+      - name: Debug Image Digest
+        run: |
+          echo "Main Library Digest: ${{ steps.get_mainlib_digest.outputs.digest }}"
+          echo "City Library Digest: ${{ steps.get_citylib_digest.outputs.digest }}"
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -65,6 +70,11 @@ jobs:
           echo "${{ secrets.CLIENT_KEY }}" | sudo tee /.minikube/profiles/minikube/client.key > /dev/null
           sudo mkdir -p $HOME/.kube
           sudo cp kubeconfig.yaml $HOME/.kube/config
+      - name: Debug Deploy Digests
+        run: |
+          echo "Main Library Digest for Deployment: ${{ needs.build-and-push.outputs.mainlib_digest }}"
+          echo "City Library Digest for Deployment: ${{ needs.build-and-push.outputs.citylib_digest }}"
+
 
       - name: Set Up kubectl
         uses: azure/setup-kubectl@v1
