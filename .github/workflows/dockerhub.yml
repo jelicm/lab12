@@ -19,19 +19,15 @@ jobs:
           username: ${{secrets.DH_USERNAME}}
           password: ${{secrets.DH_PASSWORD}}
 
-      - name: Generate a unique tag
-        id: vars
-        run: echo "::set-output name=image_tag::$(echo $GITHUB_SHA | head -c 8)"
-
       - name: main_library image build and push
         run: |
-          docker build -t milenaj/mainlib:${{ steps.vars.outputs.image_tag }} ./lab12/main-library
-          docker push milenaj/mainlib:${{ steps.vars.outputs.image_tag }}
+          docker build -t milenaj/mainlib:novo ./lab12/main-library
+          docker push milenaj/mainlib:novo
     
       - name: city_library imate build and push
         run: |
-          docker build -t milenaj/citylib:${{ steps.vars.outputs.image_tag }} ./lab12/city-library
-          docker push milenaj/citylib:${{ steps.vars.outputs.image_tag }}
+          docker build -t milenaj/citylib:novo ./lab12/city-library
+          docker push milenaj/citylib:novo
           
   deploy:
     runs-on: ubuntu-latest
@@ -55,5 +51,5 @@ jobs:
       - name: Run kubectl command
         run: |
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:${{ needs.build-and-push.outputs.image_tag }} --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:${{ needs.build-and-push.outputs.image_tag }} --insecure-skip-tls-verify
+          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:novo --insecure-skip-tls-verify
+          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:novo --insecure-skip-tls-verify
