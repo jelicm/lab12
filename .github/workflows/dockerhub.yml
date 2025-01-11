@@ -52,6 +52,6 @@ jobs:
         run: |
           kubectl get pods --insecure-skip-tls-verify
           kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:latest --insecure-skip-tls-verify
-          kubectl rollout restart deployment/citylibdepl
+          kubectl rollout restart deployment/citylibdepl --insecure-skip-tls-verify
           kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:latest --insecure-skip-tls-verify
-          kubectl rollout restart deployment/mainlibdepl
+          kubectl rollout restart deployment/mainlibdepl --insecure-skip-tls-verify
