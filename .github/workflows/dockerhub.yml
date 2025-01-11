@@ -41,7 +41,7 @@ jobs:
 
       - name: Debug Image Digest
         run: |
-          echo "Main Library Digest: ${{ IMAGE_TAG }}"
+          echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
 
 
   deploy:
@@ -66,7 +66,7 @@ jobs:
 
       - name: Run kubectl Commands
         run: |
-          echo "Main Library Digest: ${{ IMAGE_TAG }}"
+          echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
           kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@latest --insecure-skip-tls-verify
           kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@latest --insecure-skip-tls-verify
