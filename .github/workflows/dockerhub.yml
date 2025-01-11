@@ -22,12 +22,12 @@ jobs:
       - name: main_library image build and push
         run: |
           docker build -t milenaj/mainlib:novo ./lab12/main-library
-          docker push milenaj/mainlib:novo
+          docker push milenaj/mainlib:latest
     
       - name: city_library imate build and push
         run: |
           docker build -t milenaj/citylib:novo ./lab12/city-library
-          docker push milenaj/citylib:novo
+          docker push milenaj/citylib:latest
           
   deploy:
     runs-on: ubuntu-latest
@@ -51,5 +51,7 @@ jobs:
       - name: Run kubectl command
         run: |
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:novo --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:novo --insecure-skip-tls-verify
+          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:latest --insecure-skip-tls-verify
+          kubectl rollout restart deployment/citylibdepl
+          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:latest --insecure-skip-tls-verify
+          kubectl rollout restart deployment/mainlibdepl
