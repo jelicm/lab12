@@ -35,6 +35,13 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: citydb
+      initContainers:
+        - name: cleanup-locks
+          image: busybox
+          command: ["sh", "-c", "rm -f /data/db/mongod.lock"]
+          volumeMounts:
+          - name: citydb
+            mountPath: /data/db
       volumes:
         - name: citydb
           persistentVolumeClaim:
