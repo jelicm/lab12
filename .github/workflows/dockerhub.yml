@@ -1,4 +1,4 @@
-name: Build image and push to docker hub
+name: Build image and push to Docker Hub
 
 on:
   push:
@@ -9,34 +9,55 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    outputs:
+      mainlib_digest: ${{ steps.get_mainlib_digest.outputs.digest }}
+      citylib_digest: ${{ steps.get_citylib_digest.outputs.digest }}
+
     steps:
-      - name: repository checkout
+      - name: Repository Checkout
         uses: actions/checkout@v2
-  
-      - name: docker hub login
+
+      - name: Docker Hub Login
         uses: docker/login-action@v1
         with:
-          username: ${{secrets.DH_USERNAME}}
-          password: ${{secrets.DH_PASSWORD}}
+          username: ${{ secrets.DH_USERNAME }}
+          password: ${{ secrets.DH_PASSWORD }}
 
-      - name: main_library image build and push
+      - name: Build and Push main_library
+        id: build_mainlib
         run: |
           docker build -t milenaj/mainlib:latest ./lab12/main-library
           docker push milenaj/mainlib:latest
-    
-      - name: city_library imate build and push
+
+      - name: Get main_library Image Digest
+        id: get_mainlib_digest
+        run: |
+          echo "digest=$(docker inspect --format='{{index .RepoDigests 0}}' milenaj/mainlib:latest)" >> $GITHUB_ENV
+        env:
+          digest: ${{ env.digest }}
+
+      - name: Build and Push city_library
+        id: build_citylib
         run: |
           docker build -t milenaj/citylib:latest ./lab12/city-library
           docker push milenaj/citylib:latest
-          
+
+      - name: Get city_library Image Digest
+        id: get_citylib_digest
+        run: |
+          echo "digest=$(docker inspect --format='{{index .RepoDigests 0}}' milenaj/citylib:latest)" >> $GITHUB_ENV
+        env:
+          digest: ${{ env.digest }}
+
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Copy files
+      - name: Copy Files
         run: |
           sudo mkdir -p /.minikube/profiles/minikube
           echo "${{ secrets.CA_CERT }}" | sudo tee /.minikube/ca.crt > /dev/null
@@ -44,12 +65,12 @@ jobs:
           echo "${{ secrets.CLIENT_KEY }}" | sudo tee /.minikube/profiles/minikube/client.key > /dev/null
           sudo mkdir -p $HOME/.kube
           sudo cp kubeconfig.yaml $HOME/.kube/config
-        
-      - name: Set up kubectl
+
+      - name: Set Up kubectl
         uses: azure/setup-kubectl@v1
 
-      - name: Run kubectl command
+      - name: Run kubectl Commands
         run: |
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:latest --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:latest --insecure-skip-tls-verify
+          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@${{ needs.build-and-push.outputs.mainlib_digest }} --insecure-skip-tls-verify
+          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@${{ needs.build-and-push.outputs.citylib_digest }} --insecure-skip-tls-verify
