@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+env:
+  IMAGE_TAG: $(echo $GITHUB_SHA | head -c 8)
 
 jobs:
   build-and-push:
@@ -23,10 +25,6 @@ jobs:
           username: ${{ secrets.DH_USERNAME }}
           password: ${{ secrets.DH_PASSWORD }}
 
-      - name: Generate a unique tag
-        id: vars
-        run: echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c 8)" >> $GITHUB_ENV
-
       - name: Build and Push main_library
         id: build_mainlib
         run: |
@@ -41,7 +39,7 @@ jobs:
 
       - name: Debug Image Digest
         run: |
-          echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
+          echo "Main Library Digest: ${{ IMAGE_TAG }}"
 
 
   deploy:
@@ -66,7 +64,7 @@ jobs:
 
       - name: Run kubectl Commands
         run: |
-          echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
+          echo "Main Library Digest: ${{ IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
           kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@latest --insecure-skip-tls-verify
           kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@latest --insecure-skip-tls-verify
