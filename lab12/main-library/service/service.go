@@ -25,7 +25,7 @@ func (service *UsersService) Register(user *domain.User) (int, error) {
 
 	_, err := service.store.GetByJmbg(user.Jmbg)
 	if err == nil {
-		return 0, errors.New("user with provided jmbg already exists!")
+		return 0, errors.New("UUser with provided jmbg already exists!")
 	}
 
 	users, err := service.store.GetAll()
