@@ -23,18 +23,15 @@ jobs:
           username: ${{ secrets.DH_USERNAME }}
           password: ${{ secrets.DH_PASSWORD }}
 
+      - name: Generate a unique tag
+        id: vars
+        run: echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c 8)" >> $GITHUB_ENV
+
       - name: Build and Push main_library
         id: build_mainlib
         run: |
           docker build -t milenaj/mainlib:latest ./lab12/main-library
           docker push milenaj/mainlib:latest
-
-      - name: Get main_library Image Digest
-        id: get_mainlib_digest
-        run: |
-          echo "digest=$(docker inspect --format='{{index .RepoDigests 0}}' milenaj/mainlib:latest)" >> $GITHUB_ENV
-        env:
-          digest: ${{ env.digest }}
 
       - name: Build and Push city_library
         id: build_citylib
@@ -42,16 +39,9 @@ jobs:
           docker build -t milenaj/citylib:latest ./lab12/city-library
           docker push milenaj/citylib:latest
 
-      - name: Get city_library Image Digest
-        id: get_citylib_digest
-        run: |
-          echo "digest=$(docker inspect --format='{{index .RepoDigests 0}}' milenaj/citylib:latest)" >> $GITHUB_ENV
-        env:
-          digest: ${{ env.digest }}
       - name: Debug Image Digest
         run: |
-          echo "Main Library Digest: ${{ steps.get_mainlib_digest.outputs.digest }}"
-          echo "City Library Digest: ${{ steps.get_citylib_digest.outputs.digest }}"
+          echo "Main Library Digest: ${{ IMAGE_TAG }}"
 
 
   deploy:
@@ -70,17 +60,13 @@ jobs:
           echo "${{ secrets.CLIENT_KEY }}" | sudo tee /.minikube/profiles/minikube/client.key > /dev/null
           sudo mkdir -p $HOME/.kube
           sudo cp kubeconfig.yaml $HOME/.kube/config
-      - name: Debug Deploy Digests
-        run: |
-          echo "Main Library Digest for Deployment: ${{ needs.build-and-push.outputs.mainlib_digest }}"
-          echo "City Library Digest for Deployment: ${{ needs.build-and-push.outputs.citylib_digest }}"
-
-
+      
       - name: Set Up kubectl
         uses: azure/setup-kubectl@v1
 
       - name: Run kubectl Commands
         run: |
+          echo "Main Library Digest: ${{ IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@${{ needs.build-and-push.outputs.mainlib_digest }} --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@${{ needs.build-and-push.outputs.citylib_digest }} --insecure-skip-tls-verify
+          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib@latest --insecure-skip-tls-verify
+          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib@latest --insecure-skip-tls-verify
