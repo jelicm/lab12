@@ -29,6 +29,7 @@ spec:
 
         - name: citydb
           image: mongo
+          imagePullPolicy: Never
           ports:
             - containerPort: 27017
           volumeMounts:
