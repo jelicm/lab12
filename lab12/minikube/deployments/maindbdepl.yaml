@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maindb-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maindb
+  template:
+    metadata:
+      labels:
+        app: maindb
+    spec:
+      containers:
+        - name: maindb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - mountPath: /data/db
+              name: maindb
+      volumes:
+        - name: maindb
+          persistentVolumeClaim:
+            claimName: mainpvc

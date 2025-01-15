@@ -19,23 +19,10 @@ spec:
             - containerPort: 8000
           env:
           - name: DB_HOST
-            value: "localhost"
+            value: "citydb-service"
           - name: DB_PORT
-            value: "27017"
+            value: "27018"
           - name: MAIN_HOST
             value: "mainservice"
           - name: MAIN_PORT
             value: "8080"
-
-        - name: citydb
-          image: mongo
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - mountPath: /data/db
-              name: citydb
-      volumes:
-        - name: citydb
-          persistentVolumeClaim:
-            claimName: citypvc

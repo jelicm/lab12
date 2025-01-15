@@ -19,19 +19,6 @@ spec:
             - containerPort: 8080
           env:
           - name: MAIN_DB_HOST
-            value: "localhost"
+            value: "maindb-service"
           - name: MAIN_DB_PORT
             value: "27017"
-
-        - name: maindb
-          image: mongo
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - mountPath: /data/db
-              name: maindb
-      volumes:
-        - name: maindb
-          persistentVolumeClaim:
-            claimName: mainpvc
