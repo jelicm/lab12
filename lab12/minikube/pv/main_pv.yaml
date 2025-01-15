@@ -12,3 +12,18 @@ spec:
   hostPath:
     path: /main
     type: DirectoryOrCreate
+
+---
+# persistent volume claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mainpvc
+spec:
+   volumeName: mainpv
+   accessModes:
+     - ReadWriteOnce
+   storageClassName: standard
+   resources:
+     requests:
+       storage: 1Gi

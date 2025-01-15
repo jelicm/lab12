@@ -12,3 +12,19 @@ spec:
   hostPath:
     path: /city
     type: DirectoryOrCreate
+
+---
+# persistent volume claim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: citypvc
+spec:
+  volumeName: citypv
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
