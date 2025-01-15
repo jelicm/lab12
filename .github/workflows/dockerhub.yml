@@ -4,16 +4,10 @@ on:
   push:
     branches:
       - main
-env:
-  IMAGE_TAG: $(echo $GITHUB_SHA | head -c 8)
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
-    outputs:
-      mainlib_digest: ${{ steps.get_mainlib_digest.outputs.digest }}
-      citylib_digest: ${{ steps.get_citylib_digest.outputs.digest }}
 
     steps:
       - name: Repository Checkout
@@ -29,13 +23,13 @@ jobs:
         id: vars
         run: echo "IMAGE_TAG=$(echo $GITHUB_SHA | head -c 8)" >> $GITHUB_ENV
 
-      - name: Build and Push main_library
+      - name: build and push main_library
         id: build_mainlib
         run: |
           docker build -t milenaj/mainlib:${{ env.IMAGE_TAG }} ./lab12/main-library
           docker push milenaj/mainlib:${{ env.IMAGE_TAG }}
 
-      - name: Build and Push city_library
+      - name: build and push city_library
         id: build_citylib
         run: |
           docker build -t milenaj/citylib:${{ env.IMAGE_TAG }} ./lab12/city-library
@@ -43,7 +37,7 @@ jobs:
 
       - name: Debug Image Digest
         run: |
-          echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
+          echo "Main Library tag: ${{ env.IMAGE_TAG }}"
 
 
   deploy:

@@ -15,7 +15,6 @@ spec:
       containers:
         - name: mainlibrary
           image: milenaj/mainlib:latest
-          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -31,13 +30,6 @@ spec:
           volumeMounts:
             - mountPath: /data/db
               name: maindb
-      initContainers:
-        - name: cleanup-locks
-          image: busybox
-          command: ["sh", "-c", "rm -f /data/db/mongod.lock"]
-          volumeMounts:
-          - name: maindb
-            mountPath: /data/db
       volumes:
         - name: maindb
           persistentVolumeClaim:
