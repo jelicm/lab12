@@ -26,14 +26,14 @@ jobs:
       - name: build and push main_library
         id: build_mainlib
         run: |
-          docker build -t milenaj/mainlib:${{ env.IMAGE_TAG }} ./lab12/main-library
-          docker push milenaj/mainlib:${{ env.IMAGE_TAG }}
+          docker build -t milenaj/mainlib:latest ./lab12/main-library
+          docker push milenaj/mainlib:latest
 
       - name: build and push city_library
         id: build_citylib
         run: |
-          docker build -t milenaj/citylib:${{ env.IMAGE_TAG }} ./lab12/city-library
-          docker push milenaj/citylib:${{ env.IMAGE_TAG }}
+          docker build -t milenaj/citylib:latest ./lab12/city-library
+          docker push milenaj/citylib:latest
 
       - name: Debug Image Digest
         run: |
@@ -68,5 +68,5 @@ jobs:
         run: |
           echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
-          kubectl set image deployment/mainlibdepl mainlibrary=milenaj/mainlib:${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
-          kubectl set image deployment/citylibdepl citylibrary=milenaj/citylib:${{ env.IMAGE_TAG }} --insecure-skip-tls-verify
+          kubectl apply -f ./lab12/minikube/deployments/maindepl.yaml --insecure-skip-tls-verify
+          kubectl apply -f ./lab12/minikube/deployments/citydepl.yaml --insecure-skip-tls-verify
