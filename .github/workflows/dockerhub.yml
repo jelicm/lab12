@@ -68,5 +68,5 @@ jobs:
         run: |
           echo "Main Library Digest: ${{ env.IMAGE_TAG }}"
           kubectl get pods --insecure-skip-tls-verify
-          kubectl apply -f ./lab12/minikube/deployments/maindepl.yaml --insecure-skip-tls-verify
-          kubectl apply -f ./lab12/minikube/deployments/citydepl.yaml --insecure-skip-tls-verify
+          kubectl rollout restart deployment mainlibdepl --insecure-skip-tls-verify
+          kubectl rollout restart deployment citylibdepl --insecure-skip-tls-verify
