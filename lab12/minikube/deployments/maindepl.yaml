@@ -15,7 +15,7 @@ spec:
       containers:
         - name: mainlibrary
           image: milenaj/mainlib:latest
-          imagePullingPolicy: Always
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

@@ -15,7 +15,7 @@ spec:
       containers:
         - name: citylibrary
           image: milenaj/citylib:latest
-          imagePullingPolicy: Always
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
