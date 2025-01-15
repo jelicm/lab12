@@ -70,7 +70,7 @@ func (service *UsersService) Return(userId int) (int, error) {
 	}
 
 	if user.BooksNum == 0 {
-		return 0, errors.New("User has not borrowed book")
+		return 0, errors.New("User has not borrowed any book")
 	}
 
 	user.BooksNum -= 1
